@@ -111,8 +111,7 @@ final class HeadsetProfile implements LocalBluetoothProfile {
         List<BluetoothDevice> sinks = mService.getConnectedDevices();
         if (sinks != null) {
             for (BluetoothDevice sink : sinks) {
-                 if (!sink.equals(device))
-                     mService.disconnect(sink);
+                mService.disconnect(sink);
             }
         }
         return mService.connect(device);

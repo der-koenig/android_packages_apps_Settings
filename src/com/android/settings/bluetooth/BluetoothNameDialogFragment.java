@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2011 The Android Open Source Project
- * Copyright (c) 2012, The Linux Foundation. All rights reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -191,7 +190,6 @@ public final class BluetoothNameDialogFragment extends DialogFragment implements
             mDeviceNameEdited = true;
             if (mOkButton != null) {
                 mOkButton.setEnabled(s.length() != 0);
-                if (s.length() == 0) mDeviceNameEdited = false;
             }
         }
     }

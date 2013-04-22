@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2011 The Android Open Source Project
- **Copyright (c) 2012, The Linux Foundation. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -328,19 +327,10 @@ public final class DeviceProfilesSettings extends SettingsPreferenceFragment
     private void refreshProfilePreference(CheckBoxPreference profilePref,
             LocalBluetoothProfile profile) {
         BluetoothDevice device = mCachedDevice.getDevice();
-        int connectionStatus = profile.getConnectionStatus(device);
 
         /*
          * Gray out checkbox while connecting and disconnecting
          */
-        if (isServerRole(profile) && connectionStatus == BluetoothProfile.STATE_DISCONNECTED) {
-            /*no connection initiation from SAP server side*/
-            profilePref.setEnabled(false);
-            profilePref.setSummary(profile.getSummaryResourceForDevice(device));
-            Log.i(TAG, "SAP in disconnected mode -" + profile);
-            return;
-            }
-
         profilePref.setEnabled(!mCachedDevice.isBusy());
         profilePref.setChecked(profile.isPreferred(device));
         profilePref.setSummary(profile.getSummaryResourceForDevice(device));
@@ -371,9 +361,4 @@ public final class DeviceProfilesSettings extends SettingsPreferenceFragment
     private boolean getAutoConnect(LocalBluetoothProfile prof) {
         return prof.isPreferred(mCachedDevice.getDevice());
     }
-
-    private boolean isServerRole(LocalBluetoothProfile profile) {
-        return (profile.equals("SAP") || (profile.equals("DUN")));
-    }
-
 }

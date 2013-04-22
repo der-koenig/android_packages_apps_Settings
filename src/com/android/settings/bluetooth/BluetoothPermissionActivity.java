@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2011 The Android Open Source Project
- * Copyright (c) 2012 The Linux Foundation. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +21,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Message;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -58,17 +55,9 @@ public class BluetoothPermissionActivity extends AlertActivity implements
     private BluetoothDevice mDevice;
     private String mReturnPackage = null;
     private String mReturnClass = null;
-    private int requestType;
+
     private CheckBox mRememberChoice;
     private boolean mRememberChoiceValue = false;
-
-    private static final int MSG_INTERNAL_USER_CONFIRM_TIMEOUT = 1;
-    private static final int TIME_TO_WAIT = 30000;
-    /* Need it just to distinguish between DUN and SAP, because use the same routines
-       to call here*/
-    private String mUuid = null;
-    private static final String SAP_UUID = "0000112D-0000-1000-8000-00805F9B34FB";
-    private static final String DUN_UUID = "00001103-0000-1000-8000-00805F9B34FB";
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -98,11 +87,12 @@ public class BluetoothPermissionActivity extends AlertActivity implements
             finish();
             return;
         }
+
         mDevice = i.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
         mReturnPackage = i.getStringExtra(BluetoothDevice.EXTRA_PACKAGE_NAME);
         mReturnClass = i.getStringExtra(BluetoothDevice.EXTRA_CLASS_NAME);
-        requestType = i.getIntExtra(BluetoothDevice.EXTRA_ACCESS_REQUEST_TYPE,
-                                    BluetoothDevice.ERROR);
+        int requestType = i.getIntExtra(BluetoothDevice.EXTRA_ACCESS_REQUEST_TYPE,
+                                     BluetoothDevice.REQUEST_TYPE_PHONEBOOK_ACCESS);
 
         if (requestType == BluetoothDevice.REQUEST_TYPE_PROFILE_CONNECTION) {
             showConnectionDialog();
@@ -110,32 +100,15 @@ public class BluetoothPermissionActivity extends AlertActivity implements
             showPhonebookDialog();
         } else if (requestType == BluetoothDevice.REQUEST_TYPE_MESSAGE_ACCESS) {
             showMasDialog();
-        }else {
+        } else {
             Log.e(TAG, "Error: bad request type: " + requestType);
             finish();
             return;
         }
-
-        /* Post a delayed message to the handler to clear authorization dialog on time out */
-        mHandler.sendMessageDelayed(mHandler
-            .obtainMessage(MSG_INTERNAL_USER_CONFIRM_TIMEOUT), TIME_TO_WAIT);
         registerReceiver(mReceiver,
                          new IntentFilter(BluetoothDevice.ACTION_CONNECTION_ACCESS_CANCEL));
         mReceiverRegistered = true;
     }
-
-    private final Handler mHandler = new Handler() {
-      @Override
-      public void handleMessage(Message msg) {
-         switch (msg.what) {
-            case MSG_INTERNAL_USER_CONFIRM_TIMEOUT:
-               onNegative();
-               break;
-            default:
-               break;
-         }
-      }
-    };
 
     private void showConnectionDialog() {
         final AlertController.AlertParams p = mAlertParams;
@@ -249,25 +222,23 @@ public class BluetoothPermissionActivity extends AlertActivity implements
     private void onPositive() {
         if (DEBUG) Log.d(TAG, "onPositive mRememberChoiceValue: " + mRememberChoiceValue);
 
-        if (mRememberChoiceValue && (requestType == BluetoothDevice.REQUEST_TYPE_PHONEBOOK_ACCESS)) {
+        if (mRememberChoiceValue) {
             savePhonebookPermissionChoice(CachedBluetoothDevice.PHONEBOOK_ACCESS_ALLOWED);
         }
         sendIntentToReceiver(BluetoothDevice.ACTION_CONNECTION_ACCESS_REPLY, true,
                              BluetoothDevice.EXTRA_ALWAYS_ALLOWED, mRememberChoiceValue);
-        mHandler.removeMessages(MSG_INTERNAL_USER_CONFIRM_TIMEOUT);
         finish();
     }
 
     private void onNegative() {
         if (DEBUG) Log.d(TAG, "onNegative mRememberChoiceValue: " + mRememberChoiceValue);
 
-        if (mRememberChoiceValue && (requestType == BluetoothDevice.REQUEST_TYPE_PHONEBOOK_ACCESS)) {
+        if (mRememberChoiceValue) {
             savePhonebookPermissionChoice(CachedBluetoothDevice.PHONEBOOK_ACCESS_REJECTED);
         }
         sendIntentToReceiver(BluetoothDevice.ACTION_CONNECTION_ACCESS_REPLY, false,
                              null, false // dummy value, no effect since last param is null
                              );
-        mHandler.removeMessages(MSG_INTERNAL_USER_CONFIRM_TIMEOUT);
         finish();
     }
 
@@ -286,10 +257,6 @@ public class BluetoothPermissionActivity extends AlertActivity implements
         if (extraName != null) {
             intent.putExtra(extraName, extraValue);
         }
-        if ((mUuid == DUN_UUID) || (mUuid == SAP_UUID)) {
-            intent.putExtra("uuid", mUuid);
-        }
-        requestType = 0;
         intent.putExtra(BluetoothDevice.EXTRA_DEVICE, mDevice);
         sendBroadcast(intent, android.Manifest.permission.BLUETOOTH_ADMIN);
     }
@@ -326,10 +293,6 @@ public class BluetoothPermissionActivity extends AlertActivity implements
         CachedBluetoothDeviceManager cachedDeviceManager =
             bluetoothManager.getCachedDeviceManager();
         CachedBluetoothDevice cachedDevice = cachedDeviceManager.findDevice(mDevice);
-        try {
-            cachedDevice.setPhonebookPermissionChoice(permissionChoice);
-        } catch (NullPointerException ex) {
-            Log.e(TAG, "Exception occured in savePhonebookPermissionChoice");
-        }
+        cachedDevice.setPhonebookPermissionChoice(permissionChoice);
     }
 }
