@@ -185,6 +185,8 @@ public class MSimSubscriptionStatus extends PreferenceActivity {
             setSummaryText(KEY_PHONE_NUMBER, formattedNumber);
         }
 
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
     }
 
     @Override

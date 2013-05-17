@@ -607,7 +607,9 @@
                 android:label="@string/multi_sim_settings_title"
                 android:process="com.android.phone"
                 android:configChanges="mcc|mnc"
-                android:clearTaskOnLaunch="true">
+                android:clearTaskOnLaunch="true"
+                android:theme="@android:style/Theme.Holo.DialogWhenLarge"
+                android:parentActivityName="Settings">
            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="com.android.settings.MULTI_SIM_SETTINGS" />
@@ -1024,7 +1026,8 @@
         <activity android:name=".deviceinfo.MSimSubscriptionStatus"
                 android:label="@string/device_status_activity_title"
                 android:theme="@android:style/Theme.Holo.DialogWhenLarge"
-                android:process="com.android.phone">
+                android:process="com.android.phone"
+                android:parentActivityName="Settings$.deviceinfo.MSimStatus">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -1036,7 +1039,8 @@
         <activity android:name=".deviceinfo.MSimStatus"
                 android:label="@string/device_status_activity_title"
                 android:theme="@android:style/Theme.Holo.DialogWhenLarge"
-                android:process="com.android.phone">
+                android:process="com.android.phone"
+                android:parentActivityName="Settings$DeviceInfoSettingsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
