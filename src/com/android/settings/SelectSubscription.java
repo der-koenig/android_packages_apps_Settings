@@ -29,6 +29,8 @@
 
 package com.android.settings;
 
+import com.android.internal.telephony.OperatorInfo;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -72,6 +74,10 @@ public class SelectSubscription extends PreferenceActivity {
             selectIntent.putExtra(SUBSCRIPTION_KEY, i);
             subscriptionPref.setIntent(selectIntent);
             subscriptionPref.setTitle(resourceIndex[i]);
+            subscriptionPref.setEnabled(
+                    MSimTelephonyManager.getDefault().isSubActive(i));
+            String simOperatorName = MSimTelephonyManager.getDefault().getSimOperatorName(i);
+            if(simOperatorName != null) subscriptionPref.setSummary(simOperatorName);
             subscriptionPref.setOnPreferenceClickListener(mPreferenceClickListener);
             prefParent.addPreference(subscriptionPref);
         }
