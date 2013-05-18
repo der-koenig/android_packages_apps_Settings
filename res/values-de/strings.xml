@@ -714,11 +714,17 @@
     <string name="sim_change_pin" msgid="7328607264898359112">"PIN für SIM-Karte"</string>
     <string name="sim_bad_pin" msgid="2345230873496357977">"Falsche PIN"</string>
     <string name="sim_pins_dont_match" msgid="8449681619822460312">"Die PINs stimmen nicht überein."</string>
+    <string name="sim_absent">Keine SIM/RUIM</string>
     <string name="sim_change_failed" msgid="304964924772218382">"PIN kann nicht geändert werden."\n"Möglicherweise ist es die falsche PIN."</string>
     <string name="sim_change_succeeded" msgid="8556135413096489627">"SIM-PIN erfolgreich geändert"</string>
     <string name="sim_lock_failed" msgid="5651596916127873626">"Status der SIM-Kartensperrung kann nicht geändert werden."\n"Möglicherweise falsche PIN."</string>
     <string name="sim_enter_ok" msgid="6475946836899218919">"OK"</string>
     <string name="sim_enter_cancel" msgid="6240422158517208036">"Abbrechen"</string>
+    <string name="sim_change_failed_enable_sim_lock">Fehler beim Ändern des SIM/RUIM-PIN.\n SIM/RUIM gesperrt.</string>
+    <string name="sim_lock_change_not_supported">Fehler beim Ändern der SIM/RUIM-Sperre\n (wird nicht von SIM/RUIM unterstützt).</string>
+    <string name="sim_pin_attempts">\nVerbleibende Versuche:</string>
+    <string name="sim_pin_enabled">PIN1 aktiviert!</string>
+    <string name="sim_pin_disabled">PIN1 deaktiviert!</string>
     <string name="device_info_settings" product="tablet" msgid="1119755927536987178">"Tablet-Status"</string>
     <string name="device_info_settings" product="default" msgid="475872867864762157">"Telefonstatus"</string>
     <string name="firmware_version" msgid="4801135784886859972">"Android-Version"</string>
@@ -731,6 +737,8 @@
     <string name="device_status" msgid="607405385799807324">"Status"</string>
     <string name="device_status_summary" product="tablet" msgid="3292717754497039686">"Akku- und Netzwerkstatus und andere Informationen"</string>
     <string name="device_status_summary" product="default" msgid="2599162787451519618">"Telefonnummer, Signal usw."</string>
+    <string name="device_additional_status_summary">Telefonnummer, Signal, IMEI usw.</string>
+    <string name="device_additional_status">Zusätzliche Informationen</string>
     <string name="storage_settings" msgid="4211799979832404953">"Speicher"</string>
     <string name="storage_settings_title" msgid="8746016738388094064">"Speichereinstellungen"</string>
     <string name="storage_settings_summary" product="nosdcard" msgid="3543813623294870759">"USB-Speicher trennen, verfügbaren Speicher anzeigen"</string>
@@ -1702,6 +1710,28 @@
     <string name="backup_pw_set_button_text" msgid="2387480910044648795">"Passwort für Sicherung festlegen"</string>
     <string name="backup_pw_cancel_button_text" msgid="8845630125391744615">"Abbrechen"</string>
     <string name="percentage" msgid="5866131581207788624">"<xliff:g id="NUMBER">%d</xliff:g>%%"</string>
+    <string name="sel_sub_title">SIM-Karten konfigurieren</string>
+    <string name="sel_sub_summary">Aktivieren und Deaktivieren von SIM-Karten</string>
+    <string name="select_subscription">SIM-Karte wählen</string>
+    <string name="multi_sim_settings_title">Multi-SIM</string>
+    <string name="multi_sim_settings_summary">Multi-SIM-Einstellungen für Telefonie, Daten und SMS</string>
+    <string name="voice_title">Telefonie/USSD/MMI</string>
+    <string name="voice_summary">SIM-Karte für ausgehende Telefongespräche festlegen</string>
+    <string name="data_title">Datenverbindung</string>
+    <string name="data_summary">SIM-Karte für Datenverbindung festlegen</string>
+    <string name="sms_summary">SIM-Karte für den SMS-Versand festlegen</string>
+    <string name="set_data_subscription_progress">Datenverbindung wird festgelegt</string>
+    <string name="set_dds_success">Datenverbindung erfolgreich festgelegt</string>
+    <string name="set_dds_failed">Datenverbindung konnte nicht festgelegt werden.  Schließen Sie ev. bestehende Verbindungen und versuchen Sie es erneut.</string>
+    <string name="set_dds_error">Datenverbindung konnte nicht festgelegt werden.</string>
+    <string name="set_sms_error">SIM für SMS konnte nicht festgelegt werden. SIM-Karte ist nicht aktiv.</string>
+    <string name="set_voice_error">SIM für Telefonie konnte nicht festgelegt werden. SIM-Karte ist nicht aktiv.</string>
+    <string name="subscription_01_title">SIM 1</string>
+    <string name="subscription_01_summary">Netzeinstellungen für SIM 1 festlegen</string>
+    <string name="subscription_02_title">SIM 2</string>
+    <string name="subscription_02_summary">Netzeinstellungen für SIM 1 festlegen</string>
+    <string name="prompt">Nachfragen</string>
+    <string name="prompt_user">Nachfragen</string>
     <string name="additional_system_update_settings_list_item_title" msgid="214987609894661992">"Zusätzliche Systemupdates"</string>
     <string name="user_settings_title" msgid="5189224330534906766">"Nutzer &amp; Beschränkungen"</string>
     <string name="user_list_title" msgid="2152311434413878709">"Nutzer"</string>
