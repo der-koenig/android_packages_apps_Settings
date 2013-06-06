@@ -1027,7 +1027,7 @@
                 android:label="@string/device_status_activity_title"
                 android:theme="@android:style/Theme.Holo.DialogWhenLarge"
                 android:process="com.android.phone"
-                android:parentActivityName="Settings$.deviceinfo.MSimStatus">
+                android:parentActivityName=".deviceinfo.MSimStatus">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
