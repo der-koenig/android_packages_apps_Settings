@@ -1,5 +1,9 @@
 /*
  * Copyright (C) 2006 The Android Open Source Project
+ * Copyright (c) 2010-2012, The Linux Foundation. All rights reserved.
+ *
+ * Not a Contribution, Apache license notifications and license are retained
+ * for attribution purposes only
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,14 +37,19 @@ import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.PreferenceActivity;
 import android.provider.Telephony;
+import android.telephony.MSimTelephonyManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.provider.Settings;
+import android.provider.Settings.SettingNotFoundException;
 
 import com.android.internal.telephony.Phone;
+import com.android.internal.telephony.RILConstants;
 import com.android.internal.telephony.TelephonyProperties;
 
 
@@ -86,6 +95,7 @@ public class ApnEditor extends SettingsPreferenceFragment
 
     private String mCurMnc;
     private String mCurMcc;
+    private int mSubscription = 0;
 
     private Uri mUri;
     private Cursor mCursor;
@@ -168,15 +178,6 @@ public class ApnEditor extends SettingsPreferenceFragment
         mProtocol.setOnPreferenceChangeListener(this);
 
         mRoamingProtocol = (ListPreference) findPreference(KEY_ROAMING_PROTOCOL);
-        // Only enable this on CDMA phones for now, since it may cause problems on other phone
-        // types.  (This screen is not normally accessible on CDMA phones, but is useful for
-        // testing.)
-        TelephonyManager tm = (TelephonyManager)getSystemService(Activity.TELEPHONY_SERVICE);
-        if (tm.getCurrentPhoneType() == Phone.PHONE_TYPE_CDMA) {
-            mRoamingProtocol.setOnPreferenceChangeListener(this);
-        } else {
-            getPreferenceScreen().removePreference(mRoamingProtocol);
-        }
 
         mCarrierEnabled = (CheckBoxPreference) findPreference(KEY_CARRIER_ENABLED);
 
@@ -188,6 +189,9 @@ public class ApnEditor extends SettingsPreferenceFragment
         final Intent intent = getActivity().getIntent();
         String action = intent.getAction();
         Bundle fragArgs = getArguments();
+        mSubscription = intent.getIntExtra(SelectSubscription.SUBSCRIPTION_KEY,
+                MSimTelephonyManager.getDefault().getDefaultSubscription());
+        Log.d(TAG,"ApnEditor onCreate received sub: " + mSubscription);
 
         if (fragArgs != null && fragArgs.containsKey(EDIT_ACTION)) {
             mUri = Uri.parse(fragArgs.getString(EDIT_DATA));
@@ -229,7 +233,7 @@ public class ApnEditor extends SettingsPreferenceFragment
         mCursor = qCursor.loadInBackground();
         mCursor.moveToFirst();
 
-        fillUi();
+        fillUi(intent.getStringExtra(ApnSettings.OPERATOR_NUMERIC_EXTRA));
         setHasOptionsMenu(true);
     }
 
@@ -247,7 +251,7 @@ public class ApnEditor extends SettingsPreferenceFragment
         super.onPause();
     }
 
-    private void fillUi() {
+    private void fillUi(String defaultOperatorNumeric) {
         if (mFirstTime) {
             mFirstTime = false;
             // Fill in all the values from the db in both text editor and summary
@@ -265,14 +269,12 @@ public class ApnEditor extends SettingsPreferenceFragment
             mMnc.setText(mCursor.getString(MNC_INDEX));
             mApnType.setText(mCursor.getString(TYPE_INDEX));
             if (mNewApn) {
-                String numeric =
-                    SystemProperties.get(TelephonyProperties.PROPERTY_ICC_OPERATOR_NUMERIC);
                 // MCC is first 3 chars and then in 2 - 3 chars of MNC
-                if (numeric != null && numeric.length() > 4) {
+                if (defaultOperatorNumeric != null && defaultOperatorNumeric.length() > 4) {
                     // Country code
-                    String mcc = numeric.substring(0, 3);
+                    String mcc = defaultOperatorNumeric.substring(0, 3);
                     // Network code
-                    String mnc = numeric.substring(3);
+                    String mnc = defaultOperatorNumeric.substring(3);
                     // Auto populate MNC and MCC for new entries, based on what SIM reports
                     mMcc.setText(mcc);
                     mMnc.setText(mnc);
@@ -451,6 +453,7 @@ public class ApnEditor extends SettingsPreferenceFragment
         String apn = checkNotSet(mApn.getText());
         String mcc = checkNotSet(mMcc.getText());
         String mnc = checkNotSet(mMnc.getText());
+        int dataSub = 0;
 
         if (getErrorMsg() != null && !force) {
             showDialog(ERROR_DIALOG_ID);
@@ -500,8 +503,16 @@ public class ApnEditor extends SettingsPreferenceFragment
 
         values.put(Telephony.Carriers.NUMERIC, mcc + mnc);
 
+        try {
+            dataSub = Settings.System.getInt(getContentResolver(),
+                    Settings.System.MULTI_SIM_DATA_CALL_SUBSCRIPTION);
+        } catch (SettingNotFoundException snfe) {
+            Log.e(TAG, "Exception Reading Multi Sim Data Subscription Value.", snfe);
+        }
+
         if (mCurMnc != null && mCurMcc != null) {
-            if (mCurMnc.equals(mnc) && mCurMcc.equals(mcc)) {
+            if (mCurMnc.equals(mnc) && mCurMcc.equals(mcc) &&
+                    mSubscription == dataSub ) {
                 values.put(Telephony.Carriers.CURRENT, 1);
             }
         }

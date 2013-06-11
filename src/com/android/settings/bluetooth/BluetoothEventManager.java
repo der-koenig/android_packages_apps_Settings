@@ -32,6 +32,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.List;
 
 /**
  * BluetoothEventManager receives broadcasts and callbacks from the Bluetooth
@@ -283,6 +284,14 @@ final class BluetoothEventManager {
                     if (!device.getAddress().equals(getDockedDeviceAddress(context))) {
                         cachedDevice.setVisible(false);
                     }
+                }
+                if (cachedDevice.isRemovable()) {
+                    synchronized (mCallbacks) {
+                        for (BluetoothCallback callback : mCallbacks) {
+                            callback.onDeviceDeleted(cachedDevice);
+                        }
+                    }
+                    mDeviceManager.onDeviceDeleted(cachedDevice);
                 }
                 int reason = intent.getIntExtra(BluetoothDevice.EXTRA_REASON,
                         BluetoothDevice.ERROR);
