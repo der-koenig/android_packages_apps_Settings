@@ -72,6 +72,7 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment {
     private static final String KEY_EQUIPMENT_ID = "fcc_equipment_id";
     private static final String PROPERTY_EQUIPMENT_ID = "ro.ril.fccid";
     private static final String KEY_CM_UPDATES = "cm_updates";
+    private static final String KEY_OTA_UPDATER = "ota_updater";
 
     long[] mHits = new long[3];
 
@@ -97,6 +98,7 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment {
         String memInfo = getMemInfo();
 
         removePreferenceIfPackageNotInstalled(findPreference(KEY_CM_UPDATES));
+        removePreferenceIfPackageNotInstalled(findPreference(KEY_OTA_UPDATER));
 
         if (cpuInfo != null) {
             setStringSummary(KEY_DEVICE_CPU, cpuInfo);
