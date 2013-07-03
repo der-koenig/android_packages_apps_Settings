@@ -19,6 +19,7 @@ package com.android.settings;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
@@ -40,6 +41,10 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DEFAULT;
+import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
+import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER;
 
 public class DeviceInfoSettings extends SettingsPreferenceFragment {
 
@@ -355,14 +360,24 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment {
         Matcher matcher = pattern.matcher(intentUri);
 
         String packageName=matcher.find()?matcher.group(1):null;
+        final int appEnabledSetting;
         if(packageName != null) {
             try {
                 getPackageManager().getPackageInfo(packageName, 0);
-            } catch (NameNotFoundException e) {
-                Log.e(LOG_TAG,"package "+packageName+" not installed, hiding preference.");
+                appEnabledSetting = getPackageManager().getApplicationEnabledSetting(packageName);
+            } catch (Exception e) {
+                Log.w(LOG_TAG,"package "+packageName+" not installed, hiding preference.");
                 getPreferenceScreen().removePreference(preference);
                 return true;
             }
+
+            if (appEnabledSetting == COMPONENT_ENABLED_STATE_DISABLED ||
+                    appEnabledSetting == COMPONENT_ENABLED_STATE_DISABLED_USER) {
+                Log.w(LOG_TAG,"package "+packageName+" is disabled, hiding preference.");
+                getPreferenceScreen().removePreference(preference);
+                return true;
+            }
+            return false;
         }
         return false;
     }
