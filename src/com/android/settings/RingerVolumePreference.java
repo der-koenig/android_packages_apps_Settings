@@ -72,21 +72,24 @@ public class RingerVolumePreference extends VolumePreference {
         R.id.media_volume_seekbar,
         R.id.ringer_volume_seekbar,
         R.id.notification_volume_seekbar,
-        R.id.alarm_volume_seekbar
+        R.id.alarm_volume_seekbar,
+        R.id.fm_volume_seekbar
     };
 
     private static final int[] SEEKBAR_TYPE = new int[] {
         AudioManager.STREAM_MUSIC,
         AudioManager.STREAM_RING,
         AudioManager.STREAM_NOTIFICATION,
-        AudioManager.STREAM_ALARM
+        AudioManager.STREAM_ALARM,
+        AudioManager.STREAM_FM
     };
 
     private static final int[] CHECKBOX_VIEW_ID = new int[] {
         R.id.media_mute_button,
         R.id.ringer_mute_button,
         R.id.notification_mute_button,
-        R.id.alarm_mute_button
+        R.id.alarm_mute_button,
+        R.id.fm_mute_button
     };
 
     private static final int[] SEEKBAR_SECTION_ID = new int[] {
@@ -100,14 +103,16 @@ public class RingerVolumePreference extends VolumePreference {
         com.android.internal.R.drawable.ic_audio_vol_mute,
         com.android.internal.R.drawable.ic_audio_ring_notif_mute,
         com.android.internal.R.drawable.ic_audio_notification_mute,
-        com.android.internal.R.drawable.ic_audio_alarm_mute
+        com.android.internal.R.drawable.ic_audio_alarm_mute,
+        com.android.internal.R.drawable.ic_audio_fm_mute
     };
 
     private static final int[] SEEKBAR_UNMUTED_RES_ID = new int[] {
         com.android.internal.R.drawable.ic_audio_vol,
         com.android.internal.R.drawable.ic_audio_ring_notif,
         com.android.internal.R.drawable.ic_audio_notification,
-        com.android.internal.R.drawable.ic_audio_alarm
+        com.android.internal.R.drawable.ic_audio_alarm,
+        com.android.internal.R.drawable.ic_audio_fm
     };
 
     private ImageView[] mCheckBoxes = new ImageView[SEEKBAR_MUTED_RES_ID.length];
@@ -187,7 +192,8 @@ public class RingerVolumePreference extends VolumePreference {
         for (int i = 0; i < SEEKBAR_ID.length; i++) {
             SeekBar seekBar = (SeekBar) view.findViewById(SEEKBAR_ID[i]);
             mSeekBars[i] = seekBar;
-            if (SEEKBAR_TYPE[i] == AudioManager.STREAM_MUSIC) {
+            if (SEEKBAR_TYPE[i] == AudioManager.STREAM_MUSIC
+                    || SEEKBAR_TYPE[i] == AudioManager.STREAM_FM) {
                 mSeekBarVolumizer[i] = new SeekBarVolumizer(getContext(), seekBar,
                         SEEKBAR_TYPE[i], getMediaVolumeUri(getContext()));
             } else {

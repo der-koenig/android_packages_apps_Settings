@@ -243,6 +243,39 @@
                         android:layout_marginEnd="@dimen/volume_seekbar_side_margin" />
         </LinearLayout>
 
+        <TextView
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dip"
+                android:paddingLeft="16dip"
+                android:layout_gravity="start"
+                android:text="@string/volume_fm_description"
+            />
+
+        <!-- Used for the FM volume -->
+        <LinearLayout
+                android:id="@+id/fm_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="8dip"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView android:id="@+id/fm_mute_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="16dip"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:contentDescription="@string/volume_fm_mute" />
+                <SeekBar android:id="@+id/fm_volume_seekbar"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingTop="2dip"
+                        android:layout_marginRight="@dimen/volume_seekbar_side_margin" />
+        </LinearLayout>
+
     </LinearLayout>
 
 </ScrollView>

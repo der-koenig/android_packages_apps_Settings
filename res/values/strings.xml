@@ -1793,6 +1793,8 @@
     <string name="volume_notification_description">Notifications</string>
     <!-- Volume description for alarm volume -->
     <string name="volume_alarm_description">Alarms</string>
+    <!-- Volume description for FM volume -->
+    <string name="volume_fm_description">FM radio</string>
     <!-- Image description for ringer volume mute button. -->
     <string name="volume_ring_mute">Mute ringtone &amp; notifications</string>
     <!-- Image description for media volume mute button. -->
@@ -1801,6 +1803,8 @@
     <string name="volume_notification_mute">Mute notifications</string>
     <!-- Image description for alarm volume mute button. -->
     <string name="volume_alarm_mute">Mute alarms</string>
+    <!-- Image description for FM volume mute button. -->
+    <string name="volume_fm_mute">Mute FM radio</string>
     <!-- Sound settings screen, setting option name checkbox. About vibration setting
          during incoming calls. [CHAR LIMIT=30] -->
     <string name="vibrate_when_ringing_title">Vibrate when ringing</string>
